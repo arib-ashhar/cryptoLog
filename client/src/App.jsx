@@ -1,21 +1,24 @@
 import React, { Component } from 'react'
 import SimpleStorageContract from './contracts/SimpleStorage.json'
 import getWeb3 from './getWeb3'
+import { Buffer } from 'buffer';
 //import ipfs from './ipfs'
-// const ipfsClient = require('ipfs-http-client');
+import { create } from 'ipfs-hhtp-client'
+const ipfsClient = require('ipfs-http-client');
 
-// const API_KEY = '13936b972004476b92d120f91781fc9d'
-// const API_SECRET_KEY = '3a3b0319bb5f4b139efcaaf1161b2266'
-// const auth = 'Basic' + Buffer.from(API_KEY + ":" + API_SECRET_KEY).toString('base64')
+const API_KEY = '13936b972004476b92d120f91781fc9d'
+const API_SECRET_KEY = '3a3b0319bb5f4b139efcaaf1161b2266'
+const auth = 'Basic' + Buffer.from(API_KEY + ":" + API_SECRET_KEY).toString('base64')
 
-// const client = ipfsClient.create({
-//   host:'ipfs.infura.io',
-//   port: 5001,
-//   protocol: 'https',
-//   headers: {
-//     authorization: auth,
-//   },
-// })
+const client = ipfsClient.create({
+  host:'ipfs.infura.io',
+  port: 5001,
+  protocol: 'https',
+  apiPath: '/api/v0',  
+  headers: {
+    authorization: auth,
+  },
+})
 
 
 class App extends Component {
@@ -31,6 +34,8 @@ class App extends Component {
     this.captureFile = this.captureFile.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
+
+
 
   // componentWillMount() {
   //   // Get network provider and web3 instance.
@@ -76,7 +81,7 @@ class App extends Component {
   //   })
   // }
 
-  captureFile(event) {
+  captureFile = (event) => {
     event.preventDefault()
     const file = event.target.files[0]
     const reader = new window.FileReader()
@@ -87,17 +92,11 @@ class App extends Component {
     }
   }
 
-  onSubmit(event) {
+  onSubmit = (event) => {
     event.preventDefault()
-    client.add(this.state.buffer, (error, result) => {
-      if(error) {
-        console.error(error)
-        return
-      }
-      //this.simpleStorageInstance.write(result[0].hash, { from: this.state.account }).then((r) => {
-        return this.setState({ ipfsHash: result[0].hash })
-        console.log('ifpsHash', this.state.ipfsHash)
-      })
+    const res = client.add({content: this.state.buffer})
+    console.log('IPFS: ', res)
+    console.log('submitting the form')
   }
 
   render() {

@@ -6,6 +6,8 @@
     "test": "truffle test"
   },
   "dependencies": {
-    "@truffle/hdwallet-provider": "^2.1.7"
+    "@truffle/hdwallet-provider": "^2.1.7",
+    "ipfs-api": "^26.1.2",
+    "ipfs-http-client": "^60.0.0"
   }
 }
